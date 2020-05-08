@@ -13,11 +13,27 @@
       <v-card-text class="mt-3">
         <v-form ref="form" :valid="valid">
           <v-layout wrap>
-            <v-flex xs12>
-              <v-text-field prepend-icon="person" label="Farmer ID" v-model="item.farmerId"></v-text-field>
+            <v-flex xs12 md6>
+              <v-autocomplete
+                prepend-icon="person"
+                label="Farmer ID"
+                v-model="item.farmerId"
+                :search-input.sync="searchUser"
+                :items="farmers.data"
+                item-value="id"
+                item-text="name"
+              />
             </v-flex>
             <v-flex xs12 md6>
-              <v-autocomplete prepend-icon="grid_on" label="Veg ID" v-model="item.vegId" :search-input.sync="search" :items="category.data" item-value="id" item-text="code"/>
+              <v-autocomplete
+                prepend-icon="grid_on"
+                label="Veg ID"
+                v-model="item.vegId"
+                :search-input.sync="searchCategory"
+                :items="category.data"
+                item-value="id"
+                item-text="code"
+              />
             </v-flex>
             <v-flex xs12 md6>
               <v-text-field prepend-icon="category" label="Grade" v-model="item.grade"></v-text-field>
@@ -26,10 +42,20 @@
               <v-text-field prepend-icon="show_chart" label="Rate" v-model="item.rate"></v-text-field>
             </v-flex>
             <v-flex xs12 md6>
-              <v-text-field type="number" prepend-icon="score" label="Quentity" v-model="item.quantity"></v-text-field>
+              <v-text-field
+                type="number"
+                prepend-icon="score"
+                label="Quentity"
+                v-model="item.quantity"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12 md6>
-              <v-text-field type="number" prepend-icon="score" label="Free Quentity" v-model="item.freeQuantity"></v-text-field>
+              <v-text-field
+                type="number"
+                prepend-icon="score"
+                label="Free Quentity"
+                v-model="item.freeQuantity"
+              ></v-text-field>
             </v-flex>
             <v-flex xs12 md6>
               <v-menu
@@ -70,8 +96,9 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
     valid: false,
-    date1:false,
-    search:'',
+    date1: false,
+    searchCategory: "",
+    searchUser: "",
     item: {
       id: "",
       vegId: "",
@@ -87,15 +114,19 @@ export default {
     editItem(val) {
       val.id && Object.assign(this.item, val);
     },
-      search (val) {
-        this.categorySearch(val)
-      }
+    searchCategory(val) {
+      this.categorySearch(val);
+    },
+    searchUser(val) {
+      this.farmerSearch(val);
+    }
   },
   computed: {
     ...mapGetters({
       dialog: "vegetable/getDialog",
       editItem: "vegetable/getEditItem",
-      category: "category/getCategory"
+      category: "category/getCategory",
+      farmers: "user/getUserList"
     })
   },
   methods: {
@@ -105,20 +136,21 @@ export default {
       addNewVege: "vegetable/add_new_vegetable",
       updateVege: "vegetable/update_vegetable",
       categorySearch: "category/search_category",
-      setMessage:'set_message'
+      farmerSearch: "user/farner_search",
+      setMessage: "set_message"
     }),
     save() {
       if (this.$refs.form.validate()) {
         if (this.item.id) {
-          this.updateVege(this.item).then(response=>{
-            this.setMessage(response)
-            this.cancel()
-          }); 
+          this.updateVege(this.item).then(response => {
+            this.setMessage(response);
+            this.cancel();
+          });
         } else {
-          this.addNewVege(this.item).then(response=>{
-            this.setMessage(response)
-            this.cancel()
-          }); 
+          this.addNewVege(this.item).then(response => {
+            this.setMessage(response);
+            this.cancel();
+          });
         }
       }
     },

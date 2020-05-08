@@ -82,3 +82,17 @@ export const delete_user = ({ dispatch },id) => {
         })
     })
 }
+
+// **********************************************************************************************************
+//                           Get all Banks in database with Pagination
+// **********************************************************************************************************
+export const farner_search = ({ commit },query) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`api/users/searchFarmer`,{params: { searchquery: query }}).then(response => {
+            commit('set_all_users', response.data)
+            resolve(response.data);
+        }, error => {
+            reject(error);
+        })
+    })
+}

@@ -2436,7 +2436,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      items: [{
+        text: 'Farmers',
+        value: '23',
+        color: 'red',
+        icon: 'people'
+      }, {
+        text: 'Vege',
+        value: '03',
+        color: 'green',
+        icon: 'home'
+      }, {
+        text: 'Users',
+        value: '01',
+        color: 'blue',
+        icon: 'people'
+      }]
+    };
+  }
+});
 
 /***/ }),
 
@@ -2970,13 +3008,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       valid: false,
       date1: false,
-      search: '',
+      searchCategory: "",
+      searchUser: "",
       item: {
         id: "",
         vegId: "",
@@ -2993,14 +3058,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     editItem: function editItem(val) {
       val.id && Object.assign(this.item, val);
     },
-    search: function search(val) {
+    searchCategory: function searchCategory(val) {
       this.categorySearch(val);
+    },
+    searchUser: function searchUser(val) {
+      this.farmerSearch(val);
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     dialog: "vegetable/getDialog",
     editItem: "vegetable/getEditItem",
-    category: "category/getCategory"
+    category: "category/getCategory",
+    farmers: "user/getUserList"
   })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
     toggleDialog: "vegetable/toggle_dialog",
@@ -3008,7 +3077,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     addNewVege: "vegetable/add_new_vegetable",
     updateVege: "vegetable/update_vegetable",
     categorySearch: "category/search_category",
-    setMessage: 'set_message'
+    farmerSearch: "user/farner_search",
+    setMessage: "set_message"
   }), {
     save: function save() {
       var _this = this;
@@ -40393,7 +40463,80 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("v-card", [_vm._v("\n    Dash Board\n")])
+  return _c(
+    "v-container",
+    [
+      _c(
+        "v-layout",
+        { staticClass: "display-4 mt-5", attrs: { "justify-center": "" } },
+        [_vm._v("Govi Viru Application")]
+      ),
+      _vm._v(" "),
+      _c("v-divider"),
+      _vm._v(" "),
+      _c(
+        "v-layout",
+        { attrs: { "justify-space-around": "", "mt-5": "" } },
+        _vm._l(_vm.items, function(item) {
+          return _c(
+            "v-flex",
+            { key: item.text, attrs: { xs12: "", md2: "" } },
+            [
+              _c(
+                "v-sheet",
+                { attrs: { elevation: "5" } },
+                [
+                  _c(
+                    "v-layout",
+                    [
+                      _c(
+                        "v-flex",
+                        {
+                          class: item.color + " text-center",
+                          attrs: { xs4: "" }
+                        },
+                        [
+                          _c(
+                            "v-icon",
+                            {
+                              staticClass: "my-6",
+                              attrs: { "x-large": "", color: "white" }
+                            },
+                            [_vm._v(_vm._s(item.icon))]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-flex",
+                        { attrs: { xs6: "", "pa-3": "", "mx-auto": "" } },
+                        [
+                          _c("v-flex", { staticClass: "display-2" }, [
+                            _vm._v(_vm._s(item.value))
+                          ]),
+                          _vm._v(" "),
+                          _c("v-flex", [_vm._v(_vm._s(item.text))])
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        }),
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -40935,12 +41078,24 @@ var render = function() {
                     [
                       _c(
                         "v-flex",
-                        { attrs: { xs12: "" } },
+                        { attrs: { xs12: "", md6: "" } },
                         [
-                          _c("v-text-field", {
+                          _c("v-autocomplete", {
                             attrs: {
                               "prepend-icon": "person",
-                              label: "Farmer ID"
+                              label: "Farmer ID",
+                              "search-input": _vm.searchUser,
+                              items: _vm.farmers.data,
+                              "item-value": "id",
+                              "item-text": "name"
+                            },
+                            on: {
+                              "update:searchInput": function($event) {
+                                _vm.searchUser = $event
+                              },
+                              "update:search-input": function($event) {
+                                _vm.searchUser = $event
+                              }
                             },
                             model: {
                               value: _vm.item.farmerId,
@@ -40962,17 +41117,17 @@ var render = function() {
                             attrs: {
                               "prepend-icon": "grid_on",
                               label: "Veg ID",
-                              "search-input": _vm.search,
+                              "search-input": _vm.searchCategory,
                               items: _vm.category.data,
                               "item-value": "id",
                               "item-text": "code"
                             },
                             on: {
                               "update:searchInput": function($event) {
-                                _vm.search = $event
+                                _vm.searchCategory = $event
                               },
                               "update:search-input": function($event) {
-                                _vm.search = $event
+                                _vm.searchCategory = $event
                               }
                             },
                             model: {
@@ -100738,7 +100893,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************************!*\
   !*** ./resources/js/components/User/UserStore/actions.js ***!
   \***********************************************************/
-/*! exports provided: toggle_dialog, set_edit_item, get_user_list, add_new_user, get_user_details, update_user, delete_user */
+/*! exports provided: toggle_dialog, set_edit_item, get_user_list, add_new_user, get_user_details, update_user, delete_user, farner_search */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -100750,6 +100905,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_user_details", function() { return get_user_details; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update_user", function() { return update_user; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delete_user", function() { return delete_user; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "farner_search", function() { return farner_search; });
 // **********************************************************************************************************
 //                           Get all Banks in database with Pagination
 // **********************************************************************************************************
@@ -100829,6 +100985,24 @@ var delete_user = function delete_user(_ref7, id) {
   return new Promise(function (resolve, reject) {
     axios["delete"]("api/users/".concat(id)).then(function (response) {
       dispatch('get_user_list');
+      resolve(response.data);
+    }, function (error) {
+      reject(error);
+    });
+  });
+}; // **********************************************************************************************************
+//                           Get all Banks in database with Pagination
+// **********************************************************************************************************
+
+var farner_search = function farner_search(_ref8, query) {
+  var commit = _ref8.commit;
+  return new Promise(function (resolve, reject) {
+    axios.get("api/users/searchFarmer", {
+      params: {
+        searchquery: query
+      }
+    }).then(function (response) {
+      commit('set_all_users', response.data);
       resolve(response.data);
     }, function (error) {
       reject(error);

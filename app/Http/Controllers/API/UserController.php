@@ -213,10 +213,26 @@ class UserController extends Controller
         ]);
 
         $request['password'] = bcrypt('password'); 
-        $request['role'] = 1; 
+        $request['role'] = 3; 
         $user = new FarmerResource(User::create($request->all()));
 
         return response()->json($user, $this->successStatus); 
     } 
+
+     /**
+   * Get all the Item with Pagination
+   * @method GET
+   */
+  public function searchFarmer(Request $request)
+  {
+    try {
+      $queryVal = $request->searchquery;
+      $user = User::where('role',3)->where('name','like','%'.$queryVal.'%')->paginate();
+
+      return UserResource::collection($user);
+    } catch (\Exception $e) {
+      return response()->json(["message" => $e->getMessage()], 200);
+    }
+  }
 
 }
